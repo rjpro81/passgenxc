@@ -23,11 +23,11 @@ int main(int argc, char **argv)
 {
     if(strcmp(argv[1], "-createaccount") == 0)
     {
-	int result = createAccount();
-	if(result > 0)
-	{
-	    printf("Account added.\n");
-	}
+	createAccount();
+    }
+    if(strcmp(argv[1], "-view") == 0)
+    {
+        getMasterPassword();
     }
     if(strcmp(argv[1], "-help") == 0)
     {
@@ -42,14 +42,7 @@ int main(int argc, char **argv)
 	    char mPass[50];
 	    scanf("%s", mPass);
 	    printf("%s\n", mPass);
-	    printf("%s\n", getMasterPassword());
-	    if(strcmp(mPass, getMasterPassword()) == 0)
-	    {
-	        printf("The same\n");
-	    } else
-	    {
-	        printf("Not the same\n");
-	    }
+	   
         }
     }
     return 0;

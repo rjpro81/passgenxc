@@ -1,10 +1,7 @@
 #ifndef ACCOUNTMANAGERHEADER
 #define ACCOUNTMANAGERHEADER
 
-
-struct AccountManager;
-
-extern int masterPassId;
+static int callback(void *data, int argc, char **argv, char **azColName);
 
 int createMasterPassword(const char *masterPass);
 
@@ -18,6 +15,6 @@ int deleteMasterAccount(char *mPass);
 
 char* substring(char *str, int startIndex, int endIndex);
 
-char* getMasterPassword();
+int getMasterPassword();
 
 #endif

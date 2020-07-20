@@ -1,2 +1,4 @@
 *.txt
 passgenx
+sqlite3.c
+passwords
