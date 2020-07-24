@@ -21,28 +21,33 @@ void displayHelp(void)
 
 int main(int argc, char **argv)
 {
-    if(strcmp(argv[1], "-createaccount") == 0)
-    {
-	createAccount();
-    }
-    if(strcmp(argv[1], "-view") == 0)
-    {
-        getMasterPassword();
-    }
-    if(strcmp(argv[1], "-help") == 0)
+    if(argc == 1)
     {
         displayHelp();
     }
-    if(strcmp(argv[1], "-login") == 0)
+    if(argc == 2)
     {
-        char status = getSessionStatus();
-        if(strcmp(&status, "1"))
+        if(strcmp(argv[1], "-createaccount") == 0)
         {
-            printf("Enter master password: ");
-	    char mPass[50];
-	    scanf("%s", mPass);
-	    printf("%s\n", mPass);
-	   
+	    createAccount();
+        }
+        if(strcmp(argv[1], "-view") == 0)
+        {
+            getMasterPassword();
+        }
+        if(strcmp(argv[1], "-help") == 0)
+        {
+            displayHelp();
+        }
+        if(strcmp(argv[1], "-login") == 0)
+        {
+	    printf("Enter username: \n");
+	    char *username = (char *) malloc(sizeof(char) * 100);
+	    scanf("%s", username);
+	    printf("Enter password: \n");
+	    char *password = (char *) malloc(sizeof(char) * 100);
+	    scanf("%s", password);
+            accountLogin(username, password);
         }
     }
     return 0;
