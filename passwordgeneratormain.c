@@ -27,27 +27,30 @@ int main(int argc, char **argv)
     }
     if(argc == 2)
     {
-        if(strcmp(argv[1], "-createaccount") == 0)
+        if(strcmp(argv[1], "-c") == 0)
         {
 	    createAccount();
         }
-        if(strcmp(argv[1], "-view") == 0)
+        if(strcmp(argv[1], "-v") == 0)
         {
             getMasterPassword();
         }
-        if(strcmp(argv[1], "-help") == 0)
+        if(strcmp(argv[1], "-h") == 0)
         {
             displayHelp();
         }
-        if(strcmp(argv[1], "-login") == 0)
+        if(strcmp(argv[1], "-l") == 0)
         {
+	    printf("Enter master password: \n");
+	    char *mPass = (char *) malloc(sizeof(char) * 100);
+	    scanf("%s", mPass);
 	    printf("Enter username: \n");
 	    char *username = (char *) malloc(sizeof(char) * 100);
 	    scanf("%s", username);
 	    printf("Enter password: \n");
 	    char *password = (char *) malloc(sizeof(char) * 100);
 	    scanf("%s", password);
-            accountLogin(username, password);
+            accountLogin(username, password, mPass);
         }
     }
     return 0;

@@ -3,26 +3,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdbool.h>
 
 sqlite3 *db;
 char *errMsg;
 int rc;
-char *sqlStmt;
 sqlite3_stmt *stmt;
 char url[50] = "/home/ralph/passgenxc/sqlite/passwords";
 
-static int callback(void *data, int argc, char **argv, char **azColName)
+int getPasswords(void *data, int argc, char **argv, char **col)
 {
-    int i;
-    fprintf(stderr, "%s: ", (const char*)data);
-
-    for (i = 0; i < argc; i++)
+    for (int i = 0; i < argc; i++)
     {
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+        printf("**************************************************\n%s\n**************************************************\n", argv[i] ? argv[i] : "NULL");
     }
     printf("\n");
     return 0;
+}
+
+int getLoginResult(void *data, int argc, char **argv, char **col)
+{
+    int i;
+    for (i = 1; i <= argc; i++)
+    {
+        
+    }   
+    printf("%d\n", i);
 }
 
 int createLogin(char *mPass)
@@ -57,7 +63,6 @@ int createMasterPassword(const char *masterPass)
     } 
     else
     {
-	printf("%s\n", "Database opened.");
 	rc = sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
 
 	if(rc != SQLITE_OK)
@@ -82,6 +87,7 @@ int createMasterPassword(const char *masterPass)
     }
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+    free(errMsg);
     return 0;
 }
 
@@ -126,6 +132,7 @@ char* substring(char *str, int startIndex, int endIndex)
 	a = a + 1;
     }
     str = word;
+    free(word);
 
     return str;
 }
@@ -133,7 +140,6 @@ char* substring(char *str, int startIndex, int endIndex)
 int getMasterPassword()
 {
     errMsg = (char *) malloc(sizeof(char) * 100);
-    sqlStmt = (char *) malloc(sizeof(char) * 200);
     rc = sqlite3_open(url, &db);
 
     if (rc != SQLITE_OK)
@@ -143,8 +149,8 @@ int getMasterPassword()
     } 
     else
     {
-        sqlStmt = "SELECT * FROM masterPass";
-	rc = sqlite3_exec(db, sqlStmt, callback, 0, &errMsg);
+        char sqlStmt[45] = "SELECT masterPassword FROM masterPass";
+	rc = sqlite3_exec(db, sqlStmt, getPasswords, 0, &errMsg);
 
 	if(rc != SQLITE_OK)
 	{
@@ -157,16 +163,47 @@ int getMasterPassword()
 	}
     }
     sqlite3_close(db);
+    free(errMsg);
 }
 
-int accountLogin(char *username, char *password)
+int accountLogin(char *username, char *password, char *mPass)
 {
     rc = sqlite3_open(url, &db);
+    sqlite3_stmt *stmt;
+    errMsg = (char *) malloc(sizeof(char) * 100);
     if (rc != SQLITE_OK)
     {
         printf("Can't open database: %s\n", sqlite3_errmsg(db));
-	return 1;
+	return 0;
     }    
+    else
+    {
+        char sqlStmt[100] = "SELECT * FROM userLogin WHERE userName=? AND userPassword=? AND masterPassword=?";
+	rc = sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
+	if (rc != SQLITE_OK)
+	{
+	    printf("SQL err: %s\n", errMsg);
+	}
+	else
+	{
+            sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+	    sqlite3_bind_text(stmt, 2, password, -1, SQLITE_STATIC);
+	    sqlite3_bind_text(stmt, 3, mPass, -1, SQLITE_STATIC);
+	    rc = sqlite3_step(stmt);
+	    
+	    if (rc !=  SQLITE_ROW)
+	    {
+	        printf("SQL error: %s\n", errMsg);
+	    }
+	    else
+	    {
+ 	        printf("%s\n", sqlite3_column_text(stmt, 0));
+	    }
+	}
+    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    free(errMsg);
 }
 
 

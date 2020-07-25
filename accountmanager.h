@@ -11,7 +11,7 @@ int createAccount(void);
 
 int deleteAccount(char *username, char *password);
 
-int accountLogin(char *username, char *password);
+int accountLogin(char *username, char *password, char *mPass);
 
 int deleteMasterAccount(char *mPass);
 
