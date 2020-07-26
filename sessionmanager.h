@@ -2,8 +2,8 @@
 #ifndef SESSIONMANAGERHEADER
 #define SESSIONMANAGERHEADER
 
-char * getSessionUser(void);
-
+int changeSessionToLoggedIn(char *username);
+int changeSessionToLoggedOff(void);
 char getSessionStatus(void);
 
 #endif

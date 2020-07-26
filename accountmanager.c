@@ -1,4 +1,5 @@
 #include "accountmanager.h"
+#include "sessionmanager.h"
 #include </home/ralph/passgenxc/sqlite/sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -174,7 +175,7 @@ int accountLogin(char *username, char *password, char *mPass)
     if (rc != SQLITE_OK)
     {
         printf("Can't open database: %s\n", sqlite3_errmsg(db));
-	return 0;
+	return 1;
     }    
     else
     {
@@ -183,6 +184,7 @@ int accountLogin(char *username, char *password, char *mPass)
 	if (rc != SQLITE_OK)
 	{
 	    printf("SQL err: %s\n", errMsg);
+	    return 1;
 	}
 	else
 	{
@@ -194,10 +196,21 @@ int accountLogin(char *username, char *password, char *mPass)
 	    if (rc !=  SQLITE_ROW)
 	    {
 	        printf("SQL error: %s\n", errMsg);
+		return 1;
 	    }
 	    else
 	    {
- 	        printf("%s\n", sqlite3_column_text(stmt, 0));
+ 	        if (strcmp(sqlite3_column_text(stmt, 2), mPass) == 0)
+		{
+		    printf("Login sucessful.\n");
+		    changeSessionToLoggedIn(username);
+		    return 0;
+		}
+		else
+		{
+		    printf("Invalid login.\n");
+		    return 1;
+		}
 	    }
 	}
     }

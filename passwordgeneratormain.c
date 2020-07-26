@@ -41,17 +41,32 @@ int main(int argc, char **argv)
         }
         if(strcmp(argv[1], "-l") == 0)
         {
-	    printf("Enter master password: \n");
-	    char *mPass = (char *) malloc(sizeof(char) * 100);
-	    scanf("%s", mPass);
-	    printf("Enter username: \n");
-	    char *username = (char *) malloc(sizeof(char) * 100);
-	    scanf("%s", username);
-	    printf("Enter password: \n");
-	    char *password = (char *) malloc(sizeof(char) * 100);
-	    scanf("%s", password);
-            accountLogin(username, password, mPass);
+	    if (getSessionStatus() == '0')
+	    {
+	        printf("Enter master password: \n");
+	        char *mPass = (char *) malloc(sizeof(char) * 100);
+	        scanf("%s", mPass);
+	        printf("Enter username: \n");
+	        char *username = (char *) malloc(sizeof(char) * 100);
+	        scanf("%s", username);
+	        printf("Enter password: \n");
+	        char *password = (char *) malloc(sizeof(char) * 100);
+	        scanf("%s", password);
+                accountLogin(username, password, mPass);
+	    }
+	    else
+	    {
+	        printf("You are already logged in.\n");
+	    }
         }
+	if(strcmp(argv[1], "-o") == 0)
+	{
+	    int result = changeSessionToLoggedOff();
+	    if (result == 0)
+	    {
+	        printf("Logged off.\n");
+	    }
+	}
     }
     return 0;
 }
