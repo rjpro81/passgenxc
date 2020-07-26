@@ -18,7 +18,7 @@ Where options include:
     -u      prints the current session user.
     -D      allows user to delete their account from the program.
     -d      delete a stored password.
-    -v      view all stored passwords.
+    -V      view all stored passwords.
     -f <arg> 
             locate a specific stored password.
   

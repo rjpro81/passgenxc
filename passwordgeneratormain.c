@@ -31,10 +31,14 @@ int main(int argc, char **argv)
         {
 	    createAccount();
         }
-        if(strcmp(argv[1], "-v") == 0)
+        if(strcmp(argv[1], "-V") == 0)
         {
             getMasterPassword();
         }
+	if(strcmp(argv[1], "-v") == 0)
+	{
+	    printf("PassGenX: Password Generator (c) 2020 Ralph Julsaint\nversion 1.0\n");
+	}
         if(strcmp(argv[1], "-h") == 0)
         {
             displayHelp();
