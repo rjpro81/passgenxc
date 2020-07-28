@@ -9,7 +9,7 @@ int createLogin(char *mPass);
 
 int createAccount(void);
 
-int deleteAccount(char *username, char *password);
+int deleteAccount(char *mPass);
 
 int accountLogin(char *username, char *password, char *mPass);
 

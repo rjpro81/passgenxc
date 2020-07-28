@@ -3,5 +3,5 @@ passgenx
 sqlite3.c
 passwords
 sqlite
-
+sqlite3.h
 

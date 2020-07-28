@@ -1,6 +1,6 @@
 #include "accountmanager.h"
 #include "sessionmanager.h"
-#include </home/ralph/passgenxc/sqlite/sqlite3.h>
+#include </home/ralph/passgenxc/passgenxc/sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,7 +10,7 @@ sqlite3 *db;
 char *errMsg;
 int rc;
 sqlite3_stmt *stmt;
-char url[50] = "/home/ralph/passgenxc/sqlite/passwords";
+char url[50] = "/home/ralph/passgenxc/passgenxc/sqlite/passwords";
 
 int getPasswords(void *data, int argc, char **argv, char **col)
 {
@@ -213,6 +213,46 @@ int accountLogin(char *username, char *password, char *mPass)
 		}
 	    }
 	}
+    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    free(errMsg);
+}
+
+int deleteAccount(char *mPass)
+{
+    rc = sqlite3_open(url, &db);
+    char sqlStmt[50] = "DELETE FROM masterPass WHERE masterPassword=?";
+    sqlite3_stmt *stmt;
+    errMsg = (char *) malloc(sizeof(char) * 100);
+    if(rc != SQLITE_OK)
+    {
+        printf("Error: could not connect to database.\n");
+	return 1;
+    }
+    else
+    {
+       	rc = sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
+        if (rc != SQLITE_OK)
+	{
+	    printf("SQL error: %s\n", errMsg);
+	    return 1;
+	}	
+        else
+	{
+	    sqlite3_bind_text(stmt, 1, mPass, -1, SQLITE_STATIC);
+	    rc = sqlite3_step(stmt);
+	    if(rc != SQLITE_DONE)
+	    {
+	        printf("SQL error: %s\n", errMsg);
+		return 1;
+	    }
+	    else
+	    {
+	        printf("Account deleted.\n");
+		return 0;
+	    }
+	}	
     }
     sqlite3_finalize(stmt);
     sqlite3_close(db);
