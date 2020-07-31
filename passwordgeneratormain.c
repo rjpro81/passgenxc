@@ -31,10 +31,6 @@ int main(int argc, char **argv)
         {
 	    createAccount();
         }
-        if(strcmp(argv[1], "-V") == 0)
-        {
-            getMasterPassword();
-        }
 	if(strcmp(argv[1], "-v") == 0)
 	{
 	    printf("PassGenX: Password Generator (c) 2020 Ralph Julsaint\nversion 1.0\n");
@@ -48,7 +44,7 @@ int main(int argc, char **argv)
 	    if (getSessionStatus() == '0')
 	    {
 	        printf("Enter master password: \n");
-	        char *mPass = (char *) malloc(sizeof(char) * 100);
+		char *mPass = (char *) malloc(sizeof(char) * 100);
 	        scanf("%s", mPass);
 	        printf("Enter username: \n");
 	        char *username = (char *) malloc(sizeof(char) * 100);
@@ -70,6 +66,10 @@ int main(int argc, char **argv)
 	    {
 	        printf("Logged off.\n");
 	    }
+	}
+	if(strcmp(argv[1], "-D") == 0)
+	{
+	    deleteAccount();
 	}
     }
     return 0;
