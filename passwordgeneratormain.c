@@ -1,8 +1,10 @@
 #include "accountmanager.h"
 #include "sessionmanager.h"
+#include "passwordgenerator.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 void displayHelp(void)
 {
@@ -21,6 +23,7 @@ void displayHelp(void)
 
 int main(int argc, char **argv)
 {
+    srand((unsigned) time(0));
     if(argc == 1)
     {
         displayHelp();
@@ -70,6 +73,18 @@ int main(int argc, char **argv)
 	if(strcmp(argv[1], "-D") == 0)
 	{
 	    deleteAccount();
+	}
+	if(strcmp(argv[1], "-g") == 0)
+	{
+	   printf("%s\n", defaultLengthPassword());
+	}
+    }
+    if(argc == 3)
+    {
+        if(strcmp(argv[1], "-G") == 0)
+	{
+	    int passwordLength = atoi(argv[2]);
+	    printf("%s\n", variedLengthPassword(passwordLength));
 	}
     }
     return 0;

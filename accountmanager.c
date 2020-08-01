@@ -205,7 +205,7 @@ int accountLogin(char *username, char *password, char *mPass)
 	    sqlite3_bind_text(stmt, 3, mPass, -1, SQLITE_STATIC);
 	    rc = sqlite3_step(stmt);
 	    
-	    if (rc !=  SQLITE_DONE)
+	    if (rc !=  SQLITE_ROW)
 	    {
 	        printf("SQL error: %s\n", errMsg);
 		return 1;
@@ -234,7 +234,7 @@ int accountLogin(char *username, char *password, char *mPass)
 int deleteAccount(void)
 {
     rc = sqlite3_open(url, &db);
-    const char sqlStmt[30] = "DELETE FROM userLogin";
+    const char sqlStmt[30] = "DELETE FROM masterPass";
     errMsg = (char *) malloc(sizeof(char) * 100);
     if(rc != SQLITE_OK)
     {
