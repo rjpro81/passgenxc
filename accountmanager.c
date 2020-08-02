@@ -43,7 +43,7 @@ int createLogin(char *mPass)
     printf("Enter password again: \n");
     char *confirmPass = (char *) malloc(sizeof(char) * 100);
     scanf("%s", confirmPass);
-    char sqlStmt[120] = "INSERT INTO userLogin (userName, userPassword, masterPassword, masterPassId) VALUES (?, ?, ?, ?)";
+    char sqlStmt[120] = "INSERT INTO userLogin (userName, userPassword, mPasswordId) VALUES (?, ?, ?)";
     if (strcmp(password, confirmPass) == 0)
     {
         rc = sqlite3_open(url, &db);
@@ -67,8 +67,7 @@ int createLogin(char *mPass)
 		char id[2] = "1";
 	        sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
 		sqlite3_bind_text(stmt, 2, password, -1, SQLITE_STATIC);
-		sqlite3_bind_text(stmt, 3, mPass, -1, SQLITE_STATIC);
-		sqlite3_bind_text(stmt, 4, id, -1, SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 3, id, -1, SQLITE_STATIC);
 		rc = sqlite3_step(stmt);
                 if (rc != SQLITE_DONE)
 		{
@@ -95,7 +94,7 @@ int createMasterPassword(const char *masterPass)
 {
     rc = sqlite3_open(url, &db);
     errMsg = (char *) malloc(sizeof(char) * 100);
-    char sqlStmt[80] = "INSERT INTO masterPass (masterPassword) VALUES (?)";
+    char sqlStmt[100] = "INSERT INTO masterPassword (mPassword) VALUES (?)";
     sqlite3_stmt *stmt;
 
     if (rc != SQLITE_OK)
@@ -179,7 +178,7 @@ char* substring(char *str, int startIndex, int endIndex)
     return str;
 }
 
-int accountLogin(char *username, char *password, char *mPass)
+int accountLogin(char *username, char *password, int id)
 {
     rc = sqlite3_open(url, &db);
     sqlite3_stmt *stmt;
@@ -191,7 +190,7 @@ int accountLogin(char *username, char *password, char *mPass)
     }    
     else
     {
-        char sqlStmt[100] = "SELECT * FROM userLogin WHERE userName=? AND userPassword=? AND masterPassword=?";
+        char sqlStmt[100] = "SELECT * FROM userLogin WHERE userName=? AND userPassword=? AND mPasswordId=?";
 	rc = sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
 	if (rc != SQLITE_OK)
 	{
@@ -202,7 +201,7 @@ int accountLogin(char *username, char *password, char *mPass)
 	{
             sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
 	    sqlite3_bind_text(stmt, 2, password, -1, SQLITE_STATIC);
-	    sqlite3_bind_text(stmt, 3, mPass, -1, SQLITE_STATIC);
+	    sqlite3_bind_int(stmt, 3, id);
 	    rc = sqlite3_step(stmt);
 	    
 	    if (rc !=  SQLITE_ROW)
@@ -212,7 +211,7 @@ int accountLogin(char *username, char *password, char *mPass)
 	    }
 	    else
 	    {
- 	        if (strcmp(sqlite3_column_text(stmt, 2), mPass) == 0)
+ 	        if (sqlite3_column_int(stmt, 3) == id)
 		{
 		    printf("Login sucessful.\n");
 		    changeSessionToLoggedIn(username);
@@ -234,7 +233,7 @@ int accountLogin(char *username, char *password, char *mPass)
 int deleteAccount(void)
 {
     rc = sqlite3_open(url, &db);
-    const char sqlStmt[30] = "DELETE FROM masterPass";
+    const char sqlStmt[30] = "DELETE FROM masterPassword";
     errMsg = (char *) malloc(sizeof(char) * 100);
     if(rc != SQLITE_OK)
     {
@@ -269,7 +268,7 @@ void* getId(void *data, int argc, char **argv, char **col)
 int getMasterId(char *mPass)
 {
     rc = sqlite3_open(url, &db);
-    const char sqlStmt[70] = "SELECT masterPassId FROM masterPass WHERE masterPassword=?";
+    const char sqlStmt[70] = "SELECT mPasswordId FROM masterPassword WHERE mPassword=?";
     errMsg = (char *) malloc(sizeof(char) * 100);
 
     if(rc != SQLITE_OK)
@@ -290,13 +289,13 @@ int getMasterId(char *mPass)
             sqlite3_bind_text(stmt, 1, mPass, -1, SQLITE_STATIC);
 
             rc = sqlite3_step(stmt);
-	    if(rc != SQLITE_DONE)
+	    if(rc != SQLITE_ROW)
 	    {
 	        printf("SQL error: %d\n", rc);
 	    }
 	    else
 	    {
-	        printf("%d\n", rc);
+	        return sqlite3_column_int(stmt, 0);
 	    }
 	}
     }

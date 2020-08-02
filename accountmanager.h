@@ -15,7 +15,7 @@ int createAccount(void);
 
 int deleteAccount(void);
 
-int accountLogin(char *username, char *password, char *mPass);
+int accountLogin(char *username, char *password, int id);
 
 char* substring(char *str, int startIndex, int endIndex);
 

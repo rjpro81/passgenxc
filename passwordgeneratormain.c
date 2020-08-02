@@ -49,13 +49,14 @@ int main(int argc, char **argv)
 	        printf("Enter master password: \n");
 		char *mPass = (char *) malloc(sizeof(char) * 100);
 	        scanf("%s", mPass);
+		int mPasswordId = getMasterId(mPass);
 	        printf("Enter username: \n");
 	        char *username = (char *) malloc(sizeof(char) * 100);
 	        scanf("%s", username);
 	        printf("Enter password: \n");
 	        char *password = (char *) malloc(sizeof(char) * 100);
 	        scanf("%s", password);
-                accountLogin(username, password, mPass);
+                accountLogin(username, password, mPasswordId);
 	    }
 	    else
 	    {
@@ -84,7 +85,14 @@ int main(int argc, char **argv)
         if(strcmp(argv[1], "-G") == 0)
 	{
 	    int passwordLength = atoi(argv[2]);
-	    printf("%s\n", variedLengthPassword(passwordLength));
+	    if(passwordLength >= 8)
+	    {
+	        printf("%s\n", variedLengthPassword(passwordLength));
+	    }
+	    else
+	    {
+	        printf("Password length must be at least 8.\n");
+	    }
 	}
     }
     return 0;
