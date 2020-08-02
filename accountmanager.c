@@ -12,16 +12,6 @@ int rc;
 sqlite3_stmt *stmt;
 char url[50] = "/home/ralph/passgenxc/passgenxc/sqlite/passwords";
 
-int getPasswords(void *data, int argc, char **argv, char **col)
-{
-    for (int i = 0; i < argc; i++)
-    {
-        printf("**************************************************\n%s\n**************************************************\n", argv[i] ? argv[i] : "NULL");
-    }
-    printf("\n");
-    return 0;
-}
-
 int getLoginResult(void *data, int argc, char **argv, char **col)
 {
     int i;
@@ -50,7 +40,7 @@ int createLogin(char *mPass)
         sqlite3_stmt *stmt;
         if(rc != SQLITE_OK)
 	{
-	    printf("SQL error: %s\n", "can't open database");
+	    printf("SQL error: %d\n", rc);
 	    return 1;
 	}
 	else
@@ -59,7 +49,7 @@ int createLogin(char *mPass)
 
 	    if(rc != SQLITE_OK)
 	    {
-	        printf("SQL error: %s\n", errMsg);
+	        printf("SQL error: %d\n", rc);
 		return 1;
 	    }
 	    else
@@ -71,7 +61,7 @@ int createLogin(char *mPass)
 		rc = sqlite3_step(stmt);
                 if (rc != SQLITE_DONE)
 		{
-		    printf("SQL error: %s\n", errMsg);
+		    printf("SQL error: %d\n", rc);
 		    return 1;
 		}
 		else
@@ -93,14 +83,12 @@ int createLogin(char *mPass)
 int createMasterPassword(const char *masterPass)
 {
     rc = sqlite3_open(url, &db);
-    errMsg = (char *) malloc(sizeof(char) * 100);
     char sqlStmt[100] = "INSERT INTO masterPassword (mPassword) VALUES (?)";
     sqlite3_stmt *stmt;
 
     if (rc != SQLITE_OK)
     {
-        printf( "Can't open database: %s\n", sqlite3_errmsg(db));
-	return 1;
+        printf( "Can't open database: %d\n", rc);
     } 
     else
     {
@@ -108,8 +96,7 @@ int createMasterPassword(const char *masterPass)
 
 	if(rc != SQLITE_OK)
 	{
-	    printf("SQL error: %s\n", errMsg);
-	    return 1;
+	    printf("SQL error: %d\n", rc);
 	}
 	else
 	{
@@ -117,8 +104,7 @@ int createMasterPassword(const char *masterPass)
 	    rc = sqlite3_step(stmt);
 	    if (rc != SQLITE_DONE)
 	    {
-	        printf("Error: record not added.\n");
-		return 1;
+	        printf("SQL error: %d - Record not added.\n", rc);
 	    }
 	    else
 	    {
@@ -185,8 +171,7 @@ int accountLogin(char *username, char *password, int id)
     errMsg = (char *) malloc(sizeof(char) * 100);
     if (rc != SQLITE_OK)
     {
-        printf("Can't open database: %s\n", sqlite3_errmsg(db));
-	return 1;
+        printf("SQL error: %d\n", rc);
     }    
     else
     {
@@ -194,8 +179,7 @@ int accountLogin(char *username, char *password, int id)
 	rc = sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
 	if (rc != SQLITE_OK)
 	{
-	    printf("SQL err: %s\n", errMsg);
-	    return 1;
+	    printf("SQL error: %d\n", rc);
 	}
 	else
 	{
@@ -206,21 +190,19 @@ int accountLogin(char *username, char *password, int id)
 	    
 	    if (rc !=  SQLITE_ROW)
 	    {
-	        printf("SQL error: %s\n", errMsg);
-		return 1;
+	        printf("SQL error: %d\n", rc);
 	    }
 	    else
 	    {
  	        if (sqlite3_column_int(stmt, 3) == id)
 		{
 		    printf("Login sucessful.\n");
-		    changeSessionToLoggedIn(username);
+		    changeSessionToLoggedIn(sqlite3_column_int(stmt, 0), username);
 		    return 0;
 		}
 		else
 		{
-		    printf("Invalid login.\n");
-		    return 1;
+		    printf("SQL error: %d - Invalid login.\n", rc);
 		}
 	    }
 	}
@@ -234,18 +216,16 @@ int deleteAccount(void)
 {
     rc = sqlite3_open(url, &db);
     const char sqlStmt[30] = "DELETE FROM masterPassword";
-    errMsg = (char *) malloc(sizeof(char) * 100);
     if(rc != SQLITE_OK)
     {
-        printf("Error: could not connect to database.\n");
-	return 1;
+        printf("SQL error: %d\n", rc);
     }
     else
     {
         int result = sqlite3_exec(db, sqlStmt, NULL, NULL, &errMsg);
 	if (result != SQLITE_OK)
 	{
-	    printf("SQL error: %s", errMsg);
+	    printf("SQL error: %d\n", rc);
 	}
 	else
 	{
@@ -257,31 +237,90 @@ int deleteAccount(void)
     free(errMsg);
 }
 
-void* getId(void *data, int argc, char **argv, char **col)
+int getUserId(char *username, char *password)
 {
-    if(argc == 1)
+    rc = sqlite3_open(url, &db);
+    const char sqlStmt[70] = "SELECT userId FROM userLogin WHERE username=? AND userPassword=?";
+    sqlite3_stmt *stmt;
+    int id;
+
+    if(rc != SQLITE_OK)
     {
-        return data;
+        printf("SQL error: %d\n", rc);
     }
+    else
+    {
+        sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
+	sqlite3_bind_text(stmt, 1, username, -1, SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 2, password, -1, SQLITE_STATIC);
+	rc = sqlite3_step(stmt);
+
+	if (rc != SQLITE_ROW)
+	{
+	    printf("SQL error: %d\n", rc);
+	}
+	else
+	{
+	    id = sqlite3_column_int(stmt, 0);
+	    return id;
+	}
+    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    free(errMsg);
+}
+
+int getUserPassword(int userId)
+{
+    rc = sqlite3_open(url, &db);
+    const char sqlStmt[70] = "SELECT Password userPassword FROM userLogin WHERE userId=?";
+
+    if(rc != SQLITE_OK)
+    {
+        printf("SQL error: %d\n", rc);
+    }
+    else
+    {
+        rc = sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
+	if(rc != SQLITE_OK)
+	{
+	    printf("SQL error: %d\n", rc);
+	}
+	else
+	{
+	    sqlite3_bind_int(stmt, 1, userId);
+	    rc = sqlite3_step(stmt);
+
+	    if (rc != SQLITE_ROW)
+	    {
+	        printf("SQL error: %d\n", rc);
+	    }
+	    else
+	    {
+	        return sqlite3_column_int(stmt, 0);
+	    }
+	}
+    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    free(errMsg);
 }
 
 int getMasterId(char *mPass)
 {
     rc = sqlite3_open(url, &db);
     const char sqlStmt[70] = "SELECT mPasswordId FROM masterPassword WHERE mPassword=?";
-    errMsg = (char *) malloc(sizeof(char) * 100);
 
     if(rc != SQLITE_OK)
     {
-        printf("SQL error: could not connect to database.\n");
-	return 1;
+        printf("SQL error: %d\n", rc);
     }
     else
     {
 	rc = sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
 	if (rc != SQLITE_OK)
 	{
-	    printf("SQL err: %s\n", errMsg);
+	    printf("SQL error: %d\n", rc);
 	    return 1;
 	}
         else

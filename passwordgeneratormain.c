@@ -38,6 +38,10 @@ int main(int argc, char **argv)
 	{
 	    printf("PassGenX: Password Generator (c) 2020 Ralph Julsaint\nversion 1.0\n");
 	}
+	if(strcmp(argv[1], "-V") == 0)
+	{
+            getPasswordsView();	
+	}
         if(strcmp(argv[1], "-h") == 0)
         {
             displayHelp();
@@ -77,7 +81,30 @@ int main(int argc, char **argv)
 	}
 	if(strcmp(argv[1], "-g") == 0)
 	{
-	   printf("%s\n", defaultLengthPassword());
+           char *newPass = (char *) malloc(sizeof(char) * 100);
+	   newPass = defaultLengthPassword();
+	   printf("%s\n", newPass);
+	   printf("\nDo you want to save password?(Y or N) ");
+	   char savePasswordResponse[2];
+	   scanf("%s", savePasswordResponse);
+	   if(strcmp(savePasswordResponse, "N") == 0 || strcmp(savePasswordResponse, "n") == 0)
+	   {
+	       exit(0);
+	   }
+	   else if(strcmp(savePasswordResponse, "Y") == 0 || strcmp(savePasswordResponse, "y") == 0)
+	   {
+	       printf("What is the password description? ");
+	       char pDescription[100];
+	       scanf("%s", pDescription);
+	       char *id = (char *) malloc(sizeof(char) * 20);
+               id = getSessionUser();
+               int userId = atoi(id);
+	       savePassword(userId, newPass, pDescription);
+	   }
+	   else
+	   {
+	       exit(0);
+	   }
 	}
     }
     if(argc == 3)

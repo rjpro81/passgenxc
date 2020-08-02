@@ -7,6 +7,8 @@ int getPasswords(void *data, int argc, char **argv, char **col);
 
 int getMasterId(char *mPass);
 
+int getUserPassword(int userId);
+
 int createMasterPassword(const char *masterPass);
 
 int createLogin(char *mPass);
