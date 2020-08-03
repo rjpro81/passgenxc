@@ -24,13 +24,13 @@ int getLoginResult(void *data, int argc, char **argv, char **col)
 
 int createLogin(char *mPass)
 {
-    printf("Enter username: \n");
+    printf("Enter username: ");
     char *username = (char *) malloc(sizeof(char) * 100);
     scanf("%s", username);
-    printf("Enter password: \n");
+    printf("Enter password: ");
     char *password = (char *) malloc(sizeof(char) * 100);
     scanf("%s", password);
-    printf("Enter password again: \n");
+    printf("Enter password again: ");
     char *confirmPass = (char *) malloc(sizeof(char) * 100);
     scanf("%s", confirmPass);
     char sqlStmt[120] = "INSERT INTO userLogin (userName, userPassword, mPasswordId) VALUES (?, ?, ?)";

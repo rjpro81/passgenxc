@@ -74,11 +74,12 @@
 
     int getPasswords(void *data, int argc, char **argv, char **col)
     {
-        for (int i = 0; i < argc; i++)
+        printf("*************************************************************\n");        
+	for (int i = 0; i < argc; i++)
         {
-            printf("**************************************************\n%s\n**************************************************\n", argv[i] ? argv[i] : "NULL");
+            printf("%s\t", argv[i] ? argv[i] : "NULL");
         }
-        printf("\n");
+        printf("\n*************************************************************\n");        
         return 0;
     }
 
@@ -107,7 +108,38 @@
 	    }
 	}
 	sqlite3_close(db);
-	sqlite3_free(errMsg);
+	free(errMsg);
+    }
+
+    int deletePassword(int id)
+    {
+        sqlite3 *db;
+        const char url[25] = "sqlite/passwords";
+        int rc = sqlite3_open(url, &db);
+	const char sqlStmt[60] = "DELETE FROM userPasswords WHERE userPasswordId=?";
+        sqlite3_stmt *stmt;
+
+        if (rc != SQLITE_OK)
+	{
+	    printf("SQL error: %d\n", rc);
+	}
+	else
+	{
+	    sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
+	    sqlite3_bind_int(stmt, 1, id);
+	    rc = sqlite3_step(stmt);
+
+	    if(rc != SQLITE_DONE)
+	    {
+	        printf("SQL error: %d\n", rc);
+	    }
+	    else
+	    {
+	        printf("Password deleted.\n");
+	    }
+	}
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
     }
 
 

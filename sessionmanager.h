@@ -6,6 +6,7 @@ int changeSessionToLoggedIn(int userId, char *username);
 int changeSessionToLoggedOff(void);
 char getSessionStatus(void);
 char * getSessionUser(void);
+int getSessionUserId(void);
 
 #endif
 

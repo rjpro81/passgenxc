@@ -50,14 +50,14 @@ int main(int argc, char **argv)
         {
 	    if (getSessionStatus() == '0')
 	    {
-	        printf("Enter master password: \n");
+	        printf("Enter master password: ");
 		char *mPass = (char *) malloc(sizeof(char) * 100);
 	        scanf("%s", mPass);
 		int mPasswordId = getMasterId(mPass);
-	        printf("Enter username: \n");
+	        printf("Enter username: ");
 	        char *username = (char *) malloc(sizeof(char) * 100);
 	        scanf("%s", username);
-	        printf("Enter password: \n");
+	        printf("Enter password: ");
 	        char *password = (char *) malloc(sizeof(char) * 100);
 	        scanf("%s", password);
                 accountLogin(username, password, mPasswordId);
@@ -79,6 +79,26 @@ int main(int argc, char **argv)
 	{
 	    deleteAccount();
 	}
+        if(strcmp(argv[1], "-d") == 0)
+	{
+	    printf("Enter the password id#");
+	    char pId[50];
+	    scanf("%s", pId);
+	    printf("Are you sure?(Y or N)");
+	    char deletePassResponse[2];
+	    scanf("%s", deletePassResponse);
+	    
+	    if(strcmp(deletePassResponse, "N") == 0 || strcmp(deletePassResponse, "n") == 0)
+	    {
+	        exit(0);
+	    }
+	    else if(strcmp(deletePassResponse, "Y") == 0 || strcmp(deletePassResponse, "y") == 0)
+	    {
+		int passId = atoi(pId);
+	        deletePassword(passId);
+	    }
+	}
+
 	if(strcmp(argv[1], "-g") == 0)
 	{
            char *newPass = (char *) malloc(sizeof(char) * 100);
@@ -97,8 +117,7 @@ int main(int argc, char **argv)
 	       char pDescription[100];
 	       scanf("%s", pDescription);
 	       char *id = (char *) malloc(sizeof(char) * 20);
-               id = getSessionUser();
-               int userId = atoi(id);
+               int userId = getSessionUserId();
 	       savePassword(userId, newPass, pDescription);
 	   }
 	   else
