@@ -5,6 +5,7 @@
 #include <string.h>
 
 FILE *file;
+char sessionUser[100];
 
 int changeSessionToLoggedIn(int userId, char *username)
 {
@@ -59,22 +60,19 @@ char getSessionStatus(void)
 char* getSessionUser(void)
 {
     file = fopen("/home/ralph/passgenxc/passgenxc/session.txt", "r");
-    char buff[100];
-    fgets(buff, 100, file);
-    char *user = (char *) malloc(sizeof(char) * 100);
-    char ch;
-
-    while (ch=fgetc(file) != '\n')
+    char *user = (char *) malloc(sizeof(char) * 100);   
+    fgets(user, 100, file);
+    
+    int i = 5;
+    while (i < strlen(user))
     {
-        strcat(user, &ch); 
+        printf("%c", user[i]);
+	strcpy(sessionUser, &user[i]);
+	i++;
     }
-    char *sessionUser = (char *) malloc(sizeof(char) * strlen(user) + 1);
-    for (int i = 3; i < strlen(user); i++)
-    {
-        strcat(sessionUser, &user[i]);
-    }
-
+    
     return sessionUser;
+    fclose(file);
     free(user);
 }
 

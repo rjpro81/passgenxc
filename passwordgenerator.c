@@ -142,5 +142,39 @@
 	sqlite3_close(db);
     }
 
+    void getPassword(char *description)
+    {
+        sqlite3 *db;
+	const char url[25] = "sqlite/passwords";
+	int rc = sqlite3_open(url, &db);
+	const char sqlStmt[80] = "SELECT Password FROM userPasswords WHERE Description=?";
+	sqlite3_stmt *stmt;
+	const char *password = (char *) malloc(sizeof(char) * 100);
+	password = "";
+
+	if (rc != SQLITE_OK)
+	{
+	    printf("SQL error: %d\n", rc);
+	}
+	else
+	{
+	    sqlite3_prepare_v2(db, sqlStmt, -1, &stmt, NULL);
+	    sqlite3_bind_text(stmt, 1, description, -1, NULL);
+	    rc = sqlite3_step(stmt);
+
+	    if(rc != SQLITE_ROW)
+	    {
+	        printf("SQL error: %d\n%s\n", rc, "No password found.");
+	    }
+	    else
+	    {
+	        password = sqlite3_column_text(stmt, 0);
+		printf("***************************************************\n*%s\n***************************************************\n", password);
+	    }
+	}
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
+    }
+
 
    

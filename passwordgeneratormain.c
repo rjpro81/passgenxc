@@ -98,6 +98,18 @@ int main(int argc, char **argv)
 	        deletePassword(passId);
 	    }
 	}
+	if(strcmp(argv[1], "-u") == 0)
+	{
+            if(getSessionStatus() == '1')
+	    {
+	        printf("USER:");
+	        printf(" %s", getSessionUser());
+	    }
+	    else if (getSessionStatus() == '0')
+	    {
+	        printf("You are not logged in.\n");
+	    }
+	}
 
 	if(strcmp(argv[1], "-g") == 0)
 	{
@@ -139,6 +151,12 @@ int main(int argc, char **argv)
 	    {
 	        printf("Password length must be at least 8.\n");
 	    }
+	}
+	if(strcmp(argv[1], "-f") == 0)
+	{
+	    char *description = (char *) malloc(sizeof(char) * 100);
+	    description = argv[2];
+	    getPassword(description);
 	}
     }
     return 0;
