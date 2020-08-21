@@ -1,16 +1,15 @@
 #include "accountmanager.h"
 #include "sessionmanager.h"
-#include </home/ralph/passgenxc/passgenxc/sqlite3.h>
+#include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
-sqlite3 *db;
-char *errMsg;
+sqlite3 *db;//database variable;
 int rc;
 sqlite3_stmt *stmt;
-char url[50] = "/home/ralph/passgenxc/passgenxc/sqlite/passwords";
+char url[50] = "sqlite/passwords";
 
 int getLoginResult(void *data, int argc, char **argv, char **col)
 {
