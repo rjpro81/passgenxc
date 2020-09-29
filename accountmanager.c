@@ -1,6 +1,6 @@
 #include "accountmanager.h"
 #include "sessionmanager.h"
-#include <sqlite3.h>
+#include "sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -113,7 +113,6 @@ int createMasterPassword(const char *masterPass)
     }
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-    free(errMsg);
     return 0;
 }
 
@@ -167,7 +166,7 @@ int accountLogin(char *username, char *password, int id)
 {
     rc = sqlite3_open(url, &db);
     sqlite3_stmt *stmt;
-    errMsg = (char *) malloc(sizeof(char) * 100);
+    char *errMsg = (char *) malloc(sizeof(char) * 100);
     if (rc != SQLITE_OK)
     {
         printf("SQL error: %d\n", rc);
@@ -214,6 +213,7 @@ int accountLogin(char *username, char *password, int id)
 int deleteAccount(void)
 {
     rc = sqlite3_open(url, &db);
+	char *errMsg = (char *)malloc(sizeof(char) * 100);
     const char sqlStmt[30] = "DELETE FROM masterPassword";
     if(rc != SQLITE_OK)
     {
@@ -239,6 +239,7 @@ int deleteAccount(void)
 int getUserId(char *username, char *password)
 {
     rc = sqlite3_open(url, &db);
+	char *errMsg = (char *)malloc(sizeof(char) * 100);
     const char sqlStmt[70] = "SELECT userId FROM userLogin WHERE username=? AND userPassword=?";
     sqlite3_stmt *stmt;
     int id;
@@ -272,6 +273,7 @@ int getUserId(char *username, char *password)
 int getUserPassword(int userId)
 {
     rc = sqlite3_open(url, &db);
+	char *errMsg = (char *)malloc(sizeof(char) * 100);
     const char sqlStmt[70] = "SELECT Password userPassword FROM userLogin WHERE userId=?";
 
     if(rc != SQLITE_OK)
@@ -308,6 +310,7 @@ int getUserPassword(int userId)
 int getMasterId(char *mPass)
 {
     rc = sqlite3_open(url, &db);
+	char *errMsg = (char *)malloc(sizeof(char) * 100);
     const char sqlStmt[70] = "SELECT mPasswordId FROM masterPassword WHERE mPassword=?";
 
     if(rc != SQLITE_OK)

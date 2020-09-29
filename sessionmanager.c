@@ -34,7 +34,7 @@ int getSessionUserId(void)
     fgets(id, 50, file);
     char *userId = (char *) malloc(sizeof(char) * 50);
 
-    for(int i = 3; i < strlen(id); i++)
+    for(int i = 3; i < (int) strlen(id); i++)
     {
         strcat(userId, &id[i]);
     }
@@ -64,7 +64,7 @@ char* getSessionUser(void)
     fgets(user, 100, file);
     
     int i = 5;
-    while (i < strlen(user))
+    while (i < (int) strlen(user))
     {
         printf("%c", user[i]);
 	strcpy(sessionUser, &user[i]);
