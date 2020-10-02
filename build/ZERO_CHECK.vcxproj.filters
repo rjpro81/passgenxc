@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\rjpro81\Documents\passgenxc\build\CMakeFiles\f4f7e04e968261b5682e6f06dcae051b\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{463BF03F-A8C3-3E08-A40A-82E45F8ECEA3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
