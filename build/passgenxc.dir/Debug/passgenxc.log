@@ -1,0 +1,10 @@
+﻿  Building Custom Rule C:/Users/rjpro81/Documents/passgenxc/passgenxc/CMakeLists.txt
+  accountmanager.c
+c1 : fatal error C1083: Cannot open source file: 'C:\Users\rjpro81\Documents\passgenxc\passgenxc\accountmanager.c': No such file or directory
+  passwordgenerator.c
+c1 : fatal error C1083: Cannot open source file: 'C:\Users\rjpro81\Documents\passgenxc\passgenxc\passwordgenerator.c': No such file or directory
+  sessionmanager.c
+c1 : fatal error C1083: Cannot open source file: 'C:\Users\rjpro81\Documents\passgenxc\passgenxc\sessionmanager.c': No such file or directory
+  passwordgeneratormain.c
+c1 : fatal error C1083: Cannot open source file: 'C:\Users\rjpro81\Documents\passgenxc\passgenxc\passwordgeneratormain.c': No such file or directory
+  Generating Code...

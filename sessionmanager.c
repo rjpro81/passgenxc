@@ -5,11 +5,12 @@
 #include <string.h>
 
 FILE *file;
+const char *SESSION_FILE = "session.xml";
 char sessionUser[100];
 
 int changeSessionToLoggedIn(int userId, char *username)
 {
-   file = fopen("/home/ralph/passgenxc/passgenxc/session.txt", "w");
+   fopen_s(file, SESSION_FILE, "w");
    fprintf(file, "USER:%s\nID:%d\nSESSION:%d\n", username, userId, 1);
    fclose(file);
 
@@ -18,7 +19,7 @@ int changeSessionToLoggedIn(int userId, char *username)
 
 int changeSessionToLoggedOff(void)
 {
-    file = fopen("/home/ralph/passgenxc/passgenxc/session.txt", "w");
+    fopen_s(file, SESSION_FILE, "w");
     fprintf(file, "USER:NULL\nID:%d\nSESSION:%d\n", -1, 0);
     fclose(file);
 
@@ -27,14 +28,14 @@ int changeSessionToLoggedOff(void)
 
 int getSessionUserId(void)
 {
-    file = fopen("/home/ralph/passgenxc/passgenxc/session.txt", "r");
+    fopen_s(file, SESSION_FILE, "w");
     char buff[100];
     fgets(buff, 100, file);
     char id[50];
     fgets(id, 50, file);
     char *userId = (char *) malloc(sizeof(char) * 50);
 
-    for(int i = 3; i < strlen(id); i++)
+    for(int i = 3; i < (int) strlen(id); i++)
     {
         strcat(userId, &id[i]);
     }
@@ -45,7 +46,7 @@ int getSessionUserId(void)
 
 char getSessionStatus(void)
 {
-    file = fopen("/home/ralph/passgenxc/passgenxc/session.txt", "r");
+    fopen_s(file, SESSION_FILE, "r");
     char buff[100];
     fgets(buff, 100, file);
     fgets(buff, 100, file);
@@ -59,12 +60,12 @@ char getSessionStatus(void)
 
 char* getSessionUser(void)
 {
-    file = fopen("/home/ralph/passgenxc/passgenxc/session.txt", "r");
+    fopen_s(file, SESSION_FILE, "r");
     char *user = (char *) malloc(sizeof(char) * 100);   
     fgets(user, 100, file);
     
     int i = 5;
-    while (i < strlen(user))
+    while (i < (int) strlen(user))
     {
         printf("%c", user[i]);
 	strcpy(sessionUser, &user[i]);
