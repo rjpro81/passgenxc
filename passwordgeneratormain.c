@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     {
         if(strcmp(argv[1], "-c") == 0)
         {
-	    createAccount();
+	        AddMasterPassword();
         }
 	if(strcmp(argv[1], "-v") == 0)
 	{
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 	}
 	if(strcmp(argv[1], "-V") == 0)
 	{
-            getPasswordsView();	
+            //getPasswordsView();	
 	}
         if(strcmp(argv[1], "-h") == 0)
         {
@@ -44,16 +44,16 @@ int main(int argc, char **argv)
 	    if (getSessionStatus() == '0')
 	    {
 	        printf("Enter master password: ");
-		char *mPass = (char *) malloc(sizeof(char) * 100);
-	        scanf_s("%s", mPass, (unsigned)_countof(mPass));
-		int mPasswordId = getMasterId(mPass);
+		    char *mPass = (char *) malloc(sizeof(char) * 100);
+	        scanf("%s", mPass);
+		    //int mPasswordId = getMasterId(mPass);
 	        printf("Enter username: ");
 	        char *username = (char *) malloc(sizeof(char) * 100);
-	        scanf_s("%s", username, (unsigned)_countof(username));
+	        scanf("%s", username);
 	        printf("Enter password: ");
 	        char *password = (char *) malloc(sizeof(char) * 100);
-	        scanf_s("%s", password, (unsigned)_countof(password));
-                accountLogin(username, password, mPasswordId);
+	        scanf("%s", password);
+            //accountLogin(username, password, mPasswordId);
 	    }
 	    else
 	    {
@@ -70,16 +70,16 @@ int main(int argc, char **argv)
 	}
 	if(strcmp(argv[1], "-D") == 0)
 	{
-	    deleteAccount();
+	    //deleteAccount();
 	}
         if(strcmp(argv[1], "-d") == 0)
 	{
 	    printf("Enter the password id#");
 	    char pId[50];
-	    scanf_s("%s", pId, (unsigned)_countof(pId));
+	    scanf("%s", pId);
 	    printf("Are you sure?(Y or N)");
 	    char deletePassResponse[2];
-	    scanf_s("%s", deletePassResponse, (unsigned)_countof(deletePassResponse));
+	    scanf("%s", deletePassResponse);
 	    
 	    if(strcmp(deletePassResponse, "N") == 0 || strcmp(deletePassResponse, "n") == 0)
 	    {
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 	    else if(strcmp(deletePassResponse, "Y") == 0 || strcmp(deletePassResponse, "y") == 0)
 	    {
 		int passId = atoi(pId);
-	        deletePassword(passId);
+	        //deletePassword(passId);
 	    }
 	}
 	if(strcmp(argv[1], "-u") == 0)
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 	   printf("%s\n", newPass);
 	   printf("\nDo you want to save password?(Y or N) ");
 	   char savePasswordResponse[2];
-	   scanf_s("%s", savePasswordResponse, (unsigned)_countof(savePasswordResponse));
+	   scanf("%s", savePasswordResponse);
 	   if(strcmp(savePasswordResponse, "N") == 0 || strcmp(savePasswordResponse, "n") == 0)
 	   {
 	       exit(0);
@@ -120,10 +120,10 @@ int main(int argc, char **argv)
 	   {
 	       printf("What is the password description? ");
 	       char pDescription[100];
-	       scanf_s("%s", pDescription, (unsigned)_countof(pDescription));
+	       scanf("%s", pDescription);
 	       char *id = (char *) malloc(sizeof(char) * 20);
                int userId = getSessionUserId();
-	       savePassword(userId, newPass, pDescription);
+	       //savePassword(userId, newPass, pDescription);
 	   }
 	   else
 	   {
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 	{
 	    char *description = (char *) malloc(sizeof(char) * 100);
 	    description = argv[2];
-	    getPassword(description);
+	    //getPassword(description);
 	}
     }
     return 0;
